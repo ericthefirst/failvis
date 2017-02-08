@@ -1,0 +1,27 @@
+Plan
+
+Minimal Viable Product
+	Show overview of all stars of a given class, next to view of misclassified
+	Maybe stack views vertically
+
+Data
+	Python script to read standard results files and output format specified by Gautham
+		each star has u-g, g-r, r-i, i-z, PCA1, PCA2, PCA3 coordinates
+	Some method to calculate PCA for entire dataset?
+	On launch program, for all datasets
+		construct tree of mergeable sketches to store centroids, maybe standard deviations
+
+View 
+	Build on small multiples in Processing
+	Change between results for different parameters, different techniques
+	Change between axes representing various feature pairs and PCA
+		with animation
+	toggle show individual stars
+	animate both changes
+		fade 
+		or slide between frames frame to another
+
+Control
+	click-menu
+	cycle through methods using up/down
+	cycle through parameters using q/a, w/s, e/d
