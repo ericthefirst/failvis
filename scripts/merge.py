@@ -17,6 +17,9 @@ DLM = ','
 
 
 def parse_args(argv):
+	if len(argv) < 3:
+		print "Usage: {0} infiles... outfile".format(argv[0])
+		exit(1)
 	infiles = argv[1:-1]
 	outfile = argv[-1]
 	return infiles, outfile

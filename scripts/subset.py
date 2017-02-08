@@ -3,7 +3,6 @@
 from sys import argv
 from random import shuffle
 
-DLM = ','
 USAGE = "{0} infile class_size idxfile".format(argv[0])
 
 def process_args(args):
@@ -15,16 +14,21 @@ def process_args(args):
 	outfile = args[3]
 	return infile, class_size, outfile
 
-def confirm_dlm(line):
-	if len(line.strip().split(',')) < 2:
-		DLM = '\t'
 
+def get_dlm(line):
+	dlms = [',','\t',' ']
+	for dlm in dlms:
+		fields = line.strip().split(dlm)
+		if len(fields) > 1:
+			return dlm
+	return ','
 
 # in case we want to switch to using a percentage at some point
 def get_class_counts(lines):
 	class_counts = {}
+	dlm = get_dlm(lines[0])
 	for line in lines:
-		fields = line.strip().split(DLM)
+		fields = line.strip().split(dlm)
 		cls = int(fields[-1])
 		if not cls in class_counts:
 			class_counts[cls] = 1
@@ -37,17 +41,18 @@ def get_class_counts(lines):
 def generate_IDs(infile, class_size):
 	with open(infile, 'r') as f:
 		lines = f.readlines()
-	confirm_dlm(lines[0])
+	dlm = get_dlm(lines[0])
 	lines = lines[1:]
 	IDs = []
 	class_counts = get_class_counts(lines)   # note that we
 	classes = [[] for _ in range(len(class_counts))]
 	for line in lines:
-		fields = line.strip().split(DLM)
+		fields = line.strip().split(dlm)
 		ID = int(fields[0])
 		classes[int(fields[-1])].append(ID)
 	for i, cls in enumerate(classes):
 		shuffle(cls)
+		print "Class {0} has {1} elements in its subset out of {2}".format(i, min(class_size, class_counts[i]), class_counts[i])
 		classes[i] = cls[:min(class_size, class_counts[i])]
 	for cls in classes:
 		for ID in cls:

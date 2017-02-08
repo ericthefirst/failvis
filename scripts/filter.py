@@ -15,6 +15,11 @@ def parse_args(argv):
 	outfile  = argv[3]
 	return filter_file, table_file, outfile
 
+def grab_header(filename):
+	with open(filename, 'r') as f:
+		header = f.readline()
+	return header
+
 def create_filter(filename):
 	included = []
 	with open(filename, 'r') as f:
@@ -32,14 +37,12 @@ def get_dlm(line):
 	return ','
 
 def filter_table(included, table_file):
-	print "Filtering table using {0}".format(included)
 	out = ""
 	with open(table_file, 'r') as f:
 		lines = f.readlines()[1:]
 	dlm = get_dlm(lines[0])
 	for line in lines:
 		ID = line.strip().split(dlm)[0]
-		print "Testing if {0} is in {1}".format(ID, included)
 		if ID in included:
 			out += line
 	return out
@@ -50,6 +53,7 @@ def write_to_file(subset, outfile):
 
 # main
 filter_file, table_file, outfile = parse_args(sys.argv)
+header = grab_header(table_file)
 included = create_filter(filter_file)	
 subset = filter_table(included, table_file)
-write_to_file(subset, outfile)
+write_to_file(header + subset, outfile)
